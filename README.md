@@ -1,24 +1,24 @@
 # seafight
 
-build the image
+<strong>build the image<s/trong>
 ```
 docker compose build
 ```
 
-run server
+<strong>run server</strong>
 ```
 docker compose up
 ```
 
-stop server
+<strong>stop server</strong>
 ```
 docker compose down
 ```
 
-connect to container
+c<strong>onnect to container</strong>
 ```
 docker exec -it socket_fight bash
 
 ```
 
-http://localhost:8000/
+<strong>http://localhost:8000/</strong>
