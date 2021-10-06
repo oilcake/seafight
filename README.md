@@ -1,6 +1,6 @@
 # seafight
 
-<strong>build the image<s/trong>
+<strong>build the image</strong>
 ```
 docker compose build
 ```
