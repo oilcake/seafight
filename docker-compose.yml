@@ -10,4 +10,4 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    container_name: seafight_cntnr
+    container_name: socket_fight
