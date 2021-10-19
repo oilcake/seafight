@@ -139,5 +139,4 @@ cython_debug/
 
 .DS_Store
 
-seafight.sublime-project
-seafight.sublime-workspace
+*.sublime*

@@ -1,0 +1,65 @@
+<!-- chat/templates/chat/room.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Battle</title>
+</head>
+<body>
+    <textarea id="chat-log" cols="80" rows="8"></textarea><br>
+    <input id="chat-message-input" type="text" size="80"><br>
+    <input id="chat-message-submit" type="button" value="Send">
+
+    {% for y in tiles %}
+        <li>
+            {% for x in y %}
+                <button style="background-color:{{ x.color }};height:20px;width:20px"></button>
+            {% endfor %}
+        </li>
+    {% endfor %}
+
+    {{ User|json_script:"User" }}
+    <script>
+        // const field = JSON.parse(document.getElementById('field').textContent);
+        const user = JSON.parse(document.getElementById('User').textContent);
+
+        // console.log(field)
+        console.log(user)
+
+        const battle_Socket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/battle/'
+            + user
+            + '/'
+        );
+
+        battle_Socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.querySelector('#chat-log').value += (data.message + '\n');
+        };
+
+        battle_Socket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            battle_Socket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        };
+
+
+    </script>
+</body>
+</html>

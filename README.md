@@ -15,10 +15,20 @@ docker compose up
 docker compose down
 ```
 
-c<strong>onnect to container</strong>
+<strong>connect to container</strong>
 ```
 docker exec -it socket_fight bash
 
+```
+<strong>test</strong>
+```
+pytest
+
+```
+<strong>coverage report</strong>
+```
+coverage run -m pytest
+coverage report
 ```
 
 <strong>http://localhost:8000/</strong>
