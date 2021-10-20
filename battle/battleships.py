@@ -5,7 +5,6 @@ BOARDHEIGHT = 10
 BOARDWIDTH = 10
 
 # list of tuples with ships' properties - (ship_size, ship_shape)
-# 0 - ship is straight, 1 - ship is twisted
 SHIPS = [
         (1, 'straight'),
         (1, 'straight'),
@@ -41,14 +40,6 @@ def print_grid(grid):
         print(_)
 
 
-def look_for_ship(grid: object, coords: tuple):
-    """
-    returns what's going on the board within given coordinates
-    """
-    (x, y) = coords
-    return grid[y][x]
-
-
 def go_random():
     y = random.randint(0, BOARDHEIGHT - 1)
     x = random.randint(0, BOARDWIDTH - 1)
@@ -69,9 +60,11 @@ def valid(ship):
 class Tile(object):
     """
     color represents the state of the tile:
-    blue - default
-    green - missed shot
-    red - wounded ship
+    white - default
+    blue - missed
+    green - there's a ship
+    red - wounded part of the ship
+    gray - part of dead ship
     """
     color = None
 
@@ -107,18 +100,9 @@ class Tile(object):
         yield self.color
 
 
-# class Ship:
-
-#     def __init__(self, ship_properties):
-#         self.ship_size, self.ship_shape = ship_properties
-
-#     def build(self):
-#         for part in self.ship_size:
-#             x, y = go_random(grid)
-
-
 class Player:
     sea = [[]]
+    shots_log = []
 
     def __init__(self):
         self.sea = default_grid(Tile)
@@ -147,6 +131,7 @@ class Game:
         default_grid(Tile)
 
     def choose_action(self, message):
+
         message_split = message.lower().split() 
         match message_split:
 
@@ -160,8 +145,7 @@ class Game:
                         self.reply = "we are already playing, aren't we?"
 
             case letter, number if letter in GRID_LETTERS:
-                self.reply = 'try to shoot me'
-                self.shoot(GRID_LETTERS.index(letter), number)
+                self.reply = self.shoot(self.bot, GRID_LETTERS.index(letter), int(number) - 1)
 
             case 'hi', *greetings:
                 self.reply = 'prepare to die!'
@@ -172,8 +156,33 @@ class Game:
 
         return self.reply
 
-    def shoot(self, y, x):
-        print(y, x)
+    def shoot(self, target, y, x):
+        match target.sea[y][x].state:
+            case 'default':
+                target.sea[y][x].state = 'missed'
+                reply = 'Nope. My turn!'
+                self.bot_move()
+            case 'ship':
+                target.sea[y][x].state = 'killed'
+                reply = 'Omg. You are killing me!'
+            case 'wounded':
+                reply = 'Why again?! It is already hurts!'
+            case 'killed':
+                reply = 'Why again?! It is already hurts!'
+        return reply
+
+    def bot_move(self):
+        while True:
+            bot_shot = go_random()
+            if bot_shot not in self.bot.shots_log:
+                break
+        self.bot.shots_log.append(bot_shot)
+        y, x = bot_shot
+        match self.user.sea[y][x].state:                
+            case 'ship':
+                self.user.sea[y][x].state = 'killed'
+            case 'default':
+                self.user.sea[y][x].state = 'missed'
 
     def save(self, message):
         self.log.append(message)
