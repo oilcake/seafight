@@ -18,7 +18,7 @@ SHIPS = [
 
 def letter_range(start, stop="{", step=1):
     """Yield a range of lowercase letters."""
-    for ord_ in range(ord(start.upper()), ord(stop.upper()), step):
+    for ord_ in range(ord(start.lower()), ord(stop.lower()), step):
         yield chr(ord_)
 
 
@@ -115,7 +115,43 @@ class Ship:
 
 
 class Game:
-    pass
+
+    log = []
+    reply = 'prepare to be killed'
+    
+    def startgame(self):
+        pass
+
+    def choose_action(self, message):
+        message_split = message.lower().split() 
+        match message_split:
+
+            case ['start']:
+                self.startgame
+                self.reply = 'ok, let the battle start!'
+
+            case letter, number if letter in GRID_LETTERS:
+                self.reply = 'try to shoot me'
+                self.shoot(GRID_LETTERS.index(letter), number)
+
+            case 'hi', *greetings:
+                self.reply = 'prepare to die!'
+            case 'fuck', *details:
+                self.reply = 'why are you so rude?'
+            case _:
+                self.reply = "can't get you. you are strange"
+
+        return self.reply
+
+    def shoot(self, y, x):
+        print(y, x)
+
+    def save(self, message):
+        self.log.append(message)
+
+    def get_history_back(self):
+        return self.log
+
 
 
 class Sea:

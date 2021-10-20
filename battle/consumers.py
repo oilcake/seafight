@@ -14,19 +14,9 @@ def serialize(obj):
 
     return obj.__dict__
 
+game = Game()
 
 data = default_grid(Tile)
-
-x = random.randint(0, 9)
-y = random.randint(0, 9)
-data[y][x].state = 'wounded'
-x = random.randint(0, 9)
-y = random.randint(0, 9)
-data[y][x].state = 'killed'
-x = random.randint(0, 9)
-y = random.randint(0, 9)
-data[y][x].state = 'killed'
-
 
 class BattleConsumer(WebsocketConsumer):
     def connect(self):
@@ -38,17 +28,17 @@ class BattleConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-
-
+        human_signed_message = 'you: ' + message
+        game.save(human_signed_message)
+        bot_reply = 'bot: ' + game.choose_action(message)
+        game.save(bot_reply)
 
         self.send(text_data=json.dumps({
-            'message': 'you: ' + message
+            'message': human_signed_message
         }))
 
-        bot_message = 'prepare to die'
         self.send(text_data=json.dumps({
-            'message': 'bot: ' + bot_message,
-            'field': data
+            'message': bot_reply,
         },
             default=serialize
         ))

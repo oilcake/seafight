@@ -11,6 +11,9 @@
     <input id="chat-message-submit" type="button" value="Send">
 
     <h1>Human's ships</h1>
+    <div id='tile'>
+    <!-- <h1>hello</h1> -->
+    </div>
 
     {% for y in human_tiles %}
         <li>
@@ -31,8 +34,20 @@
     {% endfor %}
 
     {{ User|json_script:"User" }}
+    {{ History|json_script:"history" }}
     <script>
         const user = JSON.parse(document.getElementById('User').textContent);
+        const history = JSON.parse(document.getElementById('history').textContent);
+
+        function history_back(history) {
+
+            for (let i = 0; i < history.length; i++) {
+                past_message = history[i]
+                document.querySelector('#chat-log').value += (past_message + '\n');
+            }
+        }
+
+        history_back(history);
 
         const battle_Socket = new WebSocket(
             'ws://'
@@ -45,13 +60,10 @@
         battle_Socket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             document.querySelector('#chat-log').value += (data.message + '\n');
-            console.log(data.field)
-            render_battlefield(data.field);
+            const datafield = data.field;
+            // console.log(datafield);
+            // render_battlefield(render_buttons, datafield);
         };
-
-        function render_battlefield(field_state) {
-            // this function should draw the content of data.field to battlefield grid
-        }
 
 
         battle_Socket.onclose = function(e) {

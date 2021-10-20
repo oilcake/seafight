@@ -32,3 +32,6 @@ coverage report
 ```
 
 <strong>http://localhost:8000/</strong>
+
+to start a game send "start"
+shoot: space separated coords
