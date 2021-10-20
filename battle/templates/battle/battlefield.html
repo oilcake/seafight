@@ -10,15 +10,10 @@
     <input id="chat-message-input" type="text" size="80"><br>
     <input id="chat-message-submit" type="button" value="Send">
 
-    <h1>Human's ships</h1>
+    <h1>human's ships</h1>
     <div id='tile'>
     <!-- <h1>hello</h1> -->
     </div>
-
-
-    {% for letter in letters %}
-        {{ letter }}
-    {% endfor %}
 
     {% for y in human_tiles %}
         <li>
@@ -65,11 +60,15 @@
         battle_Socket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             document.querySelector('#chat-log').value += (data.message + '\n');
-            const datafield = data.field;
-            // console.log(datafield);
-            // render_battlefield(render_buttons, datafield);
+            const user_ships = data.user_sea;
+            const bot_ships = data.bot_sea;
+            render_battlefields();
         };
 
+        function render_battlefields() {
+            // TODO - replace with real rendering function
+            window.location = "http://localhost:8000/battle/";
+        }
 
         battle_Socket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');

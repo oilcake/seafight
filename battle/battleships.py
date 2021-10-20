@@ -8,7 +8,7 @@ BOARDWIDTH = 10
 # 0 - ship is straight, 1 - ship is twisted
 SHIPS = [
         (1, 'straight'),
-        # (1, 'straight'),
+        (1, 'straight'),
         # (2, 'straight'),
         # (3, 'straight'),
         # (3, 'twisted'),
@@ -49,13 +49,14 @@ def look_for_ship(grid: object, coords: tuple):
     return grid[y][x]
 
 
-def go_random(grid: object):
+def go_random():
     y = random.randint(0, BOARDHEIGHT - 1)
     x = random.randint(0, BOARDWIDTH - 1)
-    coords = x, y
-    what_is_there = look_for_ship(grid, coords)
-    return what_is_there
+    return y, x
 
+def place_ship(sea: object, coords: tuple):
+    y, x = (coords)
+    sea[y][x].state = 'ship'
 
 def valid(ship):
     """
@@ -90,6 +91,8 @@ class Tile(object):
                 self.color = 'white'
             case 'missed':
                 self.color = 'blue'
+            case 'ship':
+                self.color = 'green'
             case 'wounded':
                 self.color = 'red'
             case 'killed':
@@ -104,23 +107,41 @@ class Tile(object):
         yield self.color
 
 
-class Ship:
+# class Ship:
 
-    def __init__(self, ship_properties):
-        self.ship_size, self.ship_shape = ship_properties
+#     def __init__(self, ship_properties):
+#         self.ship_size, self.ship_shape = ship_properties
 
-    def build(self):
-        for part in self.ship_size:
-            x, y = go_random(grid)
+#     def build(self):
+#         for part in self.ship_size:
+#             x, y = go_random(grid)
+
+
+class Player:
+    sea = [[]]
+
+    def __init__(self):
+        self.sea = default_grid(Tile)
+
+    def place_ships(self, ships):
+        for ship in ships:
+            place_ship(self.sea, go_random())
 
 
 class Game:
 
+    state = 'idle'
     log = []
     reply = 'prepare to be killed'
+    user = Player()
+    bot = Player()
+
+    def __init__(self):
+        pass
     
     def startgame(self):
-        pass
+        self.user.place_ships(SHIPS)
+        self.bot.place_ships(SHIPS)
 
     def __init__(self):
         default_grid(Tile)
@@ -130,8 +151,13 @@ class Game:
         match message_split:
 
             case ['start']:
-                self.startgame
-                self.reply = 'ok, let the battle start!'
+                match self.state:
+                    case 'idle':
+                        self.state = 'in progress'
+                        self.startgame()
+                        self.reply = 'ok, let the battle start!'
+                    case 'in progress':
+                        self.reply = "we are already playing, aren't we?"
 
             case letter, number if letter in GRID_LETTERS:
                 self.reply = 'try to shoot me'
@@ -152,16 +178,4 @@ class Game:
     def save(self, message):
         self.log.append(message)
 
-    def get_history_back(self):
-        return self.log
 
-
-
-class Sea:
-
-    def __init__(self):
-        pass
-
-
-class Bot:
-    pass

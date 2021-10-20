@@ -10,9 +10,9 @@ user = 'You'
 
 def battlefield(request):
     return render(request, 'battle/battlefield.html',
-                  {'human_tiles': data, 
-                    'bot_tiles': data,
+                  {'human_tiles': game.user.sea, 
+                    'bot_tiles': game.bot.sea,
                   'User': user,
-                  'History': game.get_history_back(),
+                  'History': game.log,
                   'letters': GRID_LETTERS
                   })

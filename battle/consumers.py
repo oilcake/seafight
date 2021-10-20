@@ -16,7 +16,6 @@ def serialize(obj):
 
 game = Game()
 
-data = default_grid(Tile)
 
 class BattleConsumer(WebsocketConsumer):
     def connect(self):
@@ -30,15 +29,18 @@ class BattleConsumer(WebsocketConsumer):
         message = text_data_json['message']
         human_signed_message = 'you: ' + message
         game.save(human_signed_message)
-        bot_reply = 'bot: ' + game.choose_action(message)
-        game.save(bot_reply)
 
         self.send(text_data=json.dumps({
             'message': human_signed_message
         }))
+        
+        bot_reply = 'bot: ' + game.choose_action(message)
+        game.save(bot_reply)
 
         self.send(text_data=json.dumps({
             'message': bot_reply,
+            'user_sea': game.user.sea,
+            'bot_sea': game.bot.sea,
         },
             default=serialize
         ))
