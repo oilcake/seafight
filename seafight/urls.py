@@ -21,6 +21,5 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.hello, name='fight'),
-    path('chat/', include('chat.urls')),
     path('battle/', include('battle.urls'))
 ]

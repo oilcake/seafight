@@ -50,8 +50,8 @@ def look_for_ship(grid: object, coords: tuple):
 
 
 def go_random(grid: object):
-    y = random.randint(0, BOARDHEIGHT)
-    x = random.randint(0, BOARDWIDTH)
+    y = random.randint(0, BOARDHEIGHT - 1)
+    x = random.randint(0, BOARDWIDTH - 1)
     coords = x, y
     what_is_there = look_for_ship(grid, coords)
     return what_is_there
