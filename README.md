@@ -13,12 +13,10 @@ docker compose up
 <strong>connect to container</strong>
 ```
 docker exec -it socket_fight bash
-
 ```
 <strong>test</strong>
 ```
 pytest
-
 ```
 <strong>coverage report</strong>
 ```
