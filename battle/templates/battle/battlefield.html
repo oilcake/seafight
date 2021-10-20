@@ -10,7 +10,19 @@
     <input id="chat-message-input" type="text" size="80"><br>
     <input id="chat-message-submit" type="button" value="Send">
 
-    {% for y in tiles %}
+    <h1>Human's ships</h1>
+
+    {% for y in human_tiles %}
+        <li>
+            {% for x in y %}
+                <button style="background-color:{{ x.color }};height:20px;width:20px"></button>
+            {% endfor %}
+        </li>
+    {% endfor %}
+
+    <h1>bot's ships</h1>
+
+    {% for y in bot_tiles %}
         <li>
             {% for x in y %}
                 <button style="background-color:{{ x.color }};height:20px;width:20px"></button>
@@ -20,11 +32,7 @@
 
     {{ User|json_script:"User" }}
     <script>
-        // const field = JSON.parse(document.getElementById('field').textContent);
         const user = JSON.parse(document.getElementById('User').textContent);
-
-        // console.log(field)
-        console.log(user)
 
         const battle_Socket = new WebSocket(
             'ws://'
@@ -37,7 +45,14 @@
         battle_Socket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             document.querySelector('#chat-log').value += (data.message + '\n');
+            console.log(data.field)
+            render_battlefield(data.field);
         };
+
+        function render_battlefield(field_state) {
+            // this function should draw the content of data.field to battlefield grid
+        }
+
 
         battle_Socket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');

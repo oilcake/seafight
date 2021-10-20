@@ -8,11 +8,11 @@ BOARDWIDTH = 10
 # 0 - ship is straight, 1 - ship is twisted
 SHIPS = [
         (1, 'straight'),
-        (1, 'straight'),
-        (2, 'straight'),
-        (3, 'straight'),
-        (3, 'twisted'),
-        (4, 'straight')
+        # (1, 'straight'),
+        # (2, 'straight'),
+        # (3, 'straight'),
+        # (3, 'twisted'),
+        # (4, 'straight')
     ]
 
 
@@ -25,13 +25,13 @@ def letter_range(start, stop="{", step=1):
 GRID_LETTERS = list(letter_range("a", "k"))
 
 
-def default_grid(default_value):
+def default_grid(empty_tile):
     """
-    Function generates a list of 10 x 10 tiles with default_value
+    Function generates a list of 10 x 10 tiles with default values
     """
     default_grid = [[]*BOARDWIDTH]*BOARDHEIGHT
     for y in range(BOARDHEIGHT):
-        default_grid[y] = [default_value() for x in range(BOARDWIDTH)]
+        default_grid[y] = [empty_tile() for x in range(BOARDWIDTH)]
 
     return default_grid
 
@@ -96,6 +96,12 @@ class Tile(object):
                 self.color = 'gray'
 
     state = property(get_state, set_state)
+
+    def __repr__(self):
+        return self.color
+
+    def __iter__(self):
+        yield self.color
 
 
 class Ship:

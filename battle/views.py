@@ -1,14 +1,27 @@
+import random
+
 from django.shortcuts import render
 from .battleships import default_grid, Tile
+from django.template.response import TemplateResponse
+
 
 data = default_grid(Tile)
-data[5][7].state = 'wounded'
-data[3][2].state = 'killed'
-data[3][3].state = 'killed'
+x = random.randint(0, 9)
+y = random.randint(0, 9)
+data[y][x].state = 'wounded'
+x = random.randint(0, 9)
+y = random.randint(0, 9)
+data[y][x].state = 'killed'
+x = random.randint(0, 9)
+y = random.randint(0, 9)
+data[y][x].state = 'killed'
 
 user = 'Me'
 
 
 def battlefield(request):
     return render(request, 'battle/battlefield.html',
-                  {'tiles': data, 'User': user})
+                  {'human_tiles': data, 
+                    'bot_tiles': data,
+                  'User': user})
+
