@@ -10,11 +10,6 @@ docker compose build
 docker compose up
 ```
 
-<strong>stop server</strong>
-```
-docker compose down
-```
-
 <strong>connect to container</strong>
 ```
 docker exec -it socket_fight bash
@@ -35,3 +30,8 @@ coverage report
 
 to start a game send "start"
 shoot: <letter> <number>
+
+<strong>stop server</strong>
+```
+docker compose down
+```
