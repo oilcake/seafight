@@ -122,6 +122,9 @@ class Game:
     def startgame(self):
         pass
 
+    def __init__(self):
+        default_grid(Tile)
+
     def choose_action(self, message):
         message_split = message.lower().split() 
         match message_split:
@@ -161,8 +164,4 @@ class Sea:
 
 
 class Bot:
-    pass
-
-
-class Chat:
     pass

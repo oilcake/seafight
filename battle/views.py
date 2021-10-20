@@ -1,15 +1,11 @@
-import random
-
 from django.shortcuts import render
 from .battleships import default_grid, Tile
 from django.template.response import TemplateResponse
 
 from .consumers import game
+from .battleships import GRID_LETTERS
 
-
-data = default_grid(Tile)
-
-user = 'Me'
+user = 'You'
 
 
 def battlefield(request):
@@ -17,5 +13,6 @@ def battlefield(request):
                   {'human_tiles': data, 
                     'bot_tiles': data,
                   'User': user,
-                  'History': game.get_history_back()})
-
+                  'History': game.get_history_back(),
+                  'letters': GRID_LETTERS
+                  })

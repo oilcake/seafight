@@ -15,6 +15,11 @@
     <!-- <h1>hello</h1> -->
     </div>
 
+
+    {% for letter in letters %}
+        {{ letter }}
+    {% endfor %}
+
     {% for y in human_tiles %}
         <li>
             {% for x in y %}
