@@ -111,6 +111,10 @@ class Player:
         for ship in ships:
             place_ship(self.sea, go_random())
 
+    def reset_sea(self):
+        del self.sea
+        self.__init__()
+
 
 class Game:
 
@@ -129,6 +133,11 @@ class Game:
 
     def __init__(self):
         default_grid(Tile)
+
+    def reset(self):
+        self.user.reset_sea()
+        self.bot.reset_sea()
+        self.state = 'idle'
 
     def choose_action(self, message):
 
@@ -151,6 +160,9 @@ class Game:
                 self.reply = 'prepare to die!'
             case 'fuck', *details:
                 self.reply = 'why are you so rude?'
+            case ['reset']:
+                self.reply = 'ok, buy'
+                self.reset()
             case _:
                 self.reply = "can't get you. you are strange"
 
