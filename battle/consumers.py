@@ -1,9 +1,9 @@
 # chat/consumers.py
-import random
 import json
 from channels.generic.websocket import WebsocketConsumer
 
-from .battleships import default_grid, Tile, Game
+from .shipbuild import Tile
+from .game import Game
 
 
 def serialize(obj):
@@ -13,6 +13,7 @@ def serialize(obj):
         return obj.__repr__()
 
     return obj.__dict__
+
 
 game = Game()
 
@@ -33,7 +34,7 @@ class BattleConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'message': human_signed_message
         }))
-        
+
         bot_reply = 'bot: ' + game.choose_action(message)
         game.save(bot_reply)
 
