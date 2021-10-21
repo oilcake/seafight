@@ -138,6 +138,8 @@ class Game:
         self.user.reset_sea()
         self.bot.reset_sea()
         self.state = 'idle'
+        del self.log
+        self.log = []
 
     def choose_action(self, message):
 
@@ -161,8 +163,8 @@ class Game:
             case 'fuck', *details:
                 self.reply = 'why are you so rude?'
             case ['reset']:
-                self.reply = 'ok, buy'
                 self.reset()
+                self.reply = 'ok, buy'
             case _:
                 self.reply = "can't get you. you are strange"
 
