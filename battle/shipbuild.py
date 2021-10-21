@@ -4,14 +4,11 @@ import random
 BOARDHEIGHT = 10
 BOARDWIDTH = 10
 
-# list of tuples with ships' properties - (ship_size, ship_shape)
+# list of tuples with ships' properties:
+# ship_size and ship_shape - straight/twisted
 SHIPS = [
         (1, 'straight'),
         (1, 'straight'),
-        # (2, 'straight'),
-        # (3, 'straight'),
-        # (3, 'twisted'),
-        # (4, 'straight')
     ]
 
 
@@ -100,5 +97,3 @@ class Tile(object):
 
     def __iter__(self):
         yield self.color
-
-
