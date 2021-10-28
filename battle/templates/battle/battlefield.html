@@ -11,28 +11,31 @@
     <input id="chat-message-submit" type="button" value="Send">
 
     <h1>human's ships</h1>
-    <div id='tile'>
-    <!-- <h1>hello</h1> -->
+    <div id='tile_you' style="display:grid; grid-template-columns: repeat(10, 1fr); grid-gap: 5px; width: 240px;">
     </div>
 
-    {% for y in human_tiles %}
+<!--     {% for y in human_tiles %}
         <li>
             {% for x in y %}
                 <button style="background-color:{{ x.color }};height:20px;width:20px"></button>
             {% endfor %}
         </li>
     {% endfor %}
-
+ -->
     <h1>bot's ships</h1>
 
-    {% for y in bot_tiles %}
+    <div id='tile_enemy' style="display:grid; grid-template-columns: repeat(10, 1fr); grid-gap: 5px; width: 240px;">
+    </div>
+
+
+<!--     {% for y in bot_tiles %}
         <li>
             {% for x in y %}
                 <button style="background-color:{{ x.color }};height:20px;width:20px"></button>
             {% endfor %}
         </li>
     {% endfor %}
-
+ -->
     {{ User|json_script:"User" }}
     {{ History|json_script:"history" }}
     <script>
@@ -60,15 +63,48 @@
         battle_Socket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             document.querySelector('#chat-log').value += (data.message + '\n');
-            const user_ships = data.user_sea;
-            const bot_ships = data.bot_sea;
-            render_battlefields();
+            if (data.bot_sea) {
+                const user_ships = data.user_sea;
+                console.log(user_ships)
+                erase_battlefield(render_battlefield, user_ships, 'tile_enemy');
+                const bot_ships = data.bot_sea;
+                erase_battlefield(render_battlefield, bot_ships, 'tile_you');
+
+            }
         };
 
-        function render_battlefields() {
-            // TODO - replace with real rendering function
-            window.location = "http://localhost:8000/battle/";
+        function erase_battlefield(callback, battlefield, tile_ent) {
+            const tile = document.getElementById(tile_ent)
+            tile.innerHTML = null
+            callback(battlefield, tile_ent);
         }
+
+        function render_battlefield(battlefield, tile_ent) {
+
+            const colors = {
+                        "white":"#ffffff",
+                        "blue": "#0000ff",
+                        "green":"#008000",
+                        "red": "#ff0000",
+                        "gray":"#808080"
+                    }
+            const tile = document.getElementById(tile_ent);
+            tile.style.borderColor = '#000';
+    
+            const fragment = document.createDocumentFragment();
+
+            battlefield.forEach((e) => {
+                e.forEach((el) => {
+                const cellElement = document.createElement('button');
+                cellElement.style.backgroundColor = colors[el];
+                cellElement.style.height = "20px";
+                cellElement.style.width = "20px";
+                fragment.append(cellElement);
+                })
+                })
+                tile.append(fragment);
+
+            }
 
         battle_Socket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');

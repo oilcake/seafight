@@ -14,7 +14,7 @@ class Player:
 
     def reset_sea(self):
         self.sea.clear()
-        self.__init__()
+        self.sea = default_grid(Tile)
 
 
 class Game:
