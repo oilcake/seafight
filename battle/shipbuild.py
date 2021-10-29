@@ -1,4 +1,5 @@
 import random
+from collections import namedtuple
 
 
 BOARDHEIGHT = 10
@@ -75,25 +76,11 @@ class Tile(object):
 
     def set_state(self, state):
         self._state = state
-        self.paint()
-
-    def paint(self):
-        match self._state:
-            case 'default':
-                self.color = 'white'
-            case 'missed':
-                self.color = 'blue'
-            case 'ship':
-                self.color = 'green'
-            case 'wounded':
-                self.color = 'red'
-            case 'killed':
-                self.color = 'gray'
 
     state = property(get_state, set_state)
 
     def __repr__(self):
-        return self.color
+        return self.state
 
     def __iter__(self):
-        yield self.color
+        yield self.state

@@ -82,11 +82,11 @@
         function render_battlefield(battlefield, tile_ent) {
 
             const colors = {
-                        "white":"#ffffff",
-                        "blue": "#0000ff",
-                        "green":"#008000",
-                        "red": "#ff0000",
-                        "gray":"#808080"
+                        "default":"#ffffff",
+                        "missed": "#0000ff",
+                        "ship":"#008000",
+                        "wounded": "#ff0000",
+                        "killed":"#808080"
                     }
             const tile = document.getElementById(tile_ent);
             tile.style.borderColor = '#000';
