@@ -1,11 +1,8 @@
-version: "3.9"
+version: "3.8"
    
 services:
-  redis:
-    image: "redis:5"
-    ports:
-      - 6379
   web:
+    container_name: socket_fight    
     build: .
     command: python3 manage.py runserver 0.0.0.0:8000
     environment:
@@ -14,4 +11,3 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    container_name: socket_fight

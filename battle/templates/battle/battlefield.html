@@ -14,64 +14,16 @@
     <div id='tile_you' style="display:grid; grid-template-columns: repeat(10, 1fr); grid-gap: 5px; width: 240px;">
     </div>
 
-<!--     {% for y in human_tiles %}
-        <li>
-            {% for x in y %}
-                <button style="background-color:{{ x.color }};height:20px;width:20px"></button>
-            {% endfor %}
-        </li>
-    {% endfor %}
- -->
     <h1>bot's ships</h1>
 
     <div id='tile_enemy' style="display:grid; grid-template-columns: repeat(10, 1fr); grid-gap: 5px; width: 240px;">
     </div>
 
-
-<!--     {% for y in bot_tiles %}
-        <li>
-            {% for x in y %}
-                <button style="background-color:{{ x.color }};height:20px;width:20px"></button>
-            {% endfor %}
-        </li>
-    {% endfor %}
- -->
     {{ User|json_script:"User" }}
     {{ History|json_script:"history" }}
+
+
     <script>
-        const user = JSON.parse(document.getElementById('User').textContent);
-        const history = JSON.parse(document.getElementById('history').textContent);
-
-        function history_back(history) {
-
-            for (let i = 0; i < history.length; i++) {
-                past_message = history[i]
-                document.querySelector('#chat-log').value += (past_message + '\n');
-            }
-        }
-
-        history_back(history);
-
-        const battle_Socket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/battle/'
-            + user
-            + '/'
-        );
-
-        battle_Socket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
-            if (data.bot_sea) {
-                const user_ships = data.user_sea;
-                console.log(user_ships)
-                erase_battlefield(render_battlefield, user_ships, 'tile_enemy');
-                const bot_ships = data.bot_sea;
-                erase_battlefield(render_battlefield, bot_ships, 'tile_you');
-
-            }
-        };
 
         function erase_battlefield(callback, battlefield, tile_ent) {
             const tile = document.getElementById(tile_ent)
@@ -95,16 +47,56 @@
 
             battlefield.forEach((e) => {
                 e.forEach((el) => {
-                const cellElement = document.createElement('button');
-                cellElement.style.backgroundColor = colors[el];
-                cellElement.style.height = "20px";
-                cellElement.style.width = "20px";
-                fragment.append(cellElement);
-                })
+                    const cellElement = document.createElement('button');
+                    cellElement.style.backgroundColor = colors[el];
+                    cellElement.style.height = "20px";
+                    cellElement.style.width = "20px";
+                    fragment.append(cellElement);
+                    })
                 })
                 tile.append(fragment);
 
             }
+
+        const user = JSON.parse(document.getElementById('User').textContent);
+        const history = JSON.parse(document.getElementById('history').textContent);
+
+        function history_back(history) {
+
+            for (let i = 0; i < history.length; i++) {
+                past_message = history[i]
+                document.querySelector('#chat-log').value += (past_message + '\n');
+            }
+        }
+
+        history_back(history);
+
+        // const user_ships = JSON.parse(document.getElementById('human_tiles').textContent);
+        // render_battlefield(user_ships, 'tile_enemy');
+        // const bot_ships = JSON.parse(document.getElementById('bot_tiles').textContent);
+        // render_battlefield(bot_ships, 'tile_you');
+
+
+        const battle_Socket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/battle/'
+            + user
+            + '/'
+        );
+
+        battle_Socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.querySelector('#chat-log').value += (data.message + '\n');
+            if (data.bot_sea) {
+                const user_ships = data.user_sea;
+                erase_battlefield(render_battlefield, user_ships, 'tile_enemy');
+                const bot_ships = data.bot_sea;
+                erase_battlefield(render_battlefield, bot_ships, 'tile_you');
+
+            }
+        };
+
 
         battle_Socket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');
