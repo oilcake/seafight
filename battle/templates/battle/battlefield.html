@@ -19,7 +19,7 @@
     <div id='tile_enemy' style="display:grid; grid-template-columns: repeat(10, 1fr); grid-gap: 5px; width: 240px;">
     </div>
 
-    {{ User|json_script:"User" }}
+    {{ room_name|json_script:"room_name" }}
     {{ History|json_script:"history" }}
 
 
@@ -58,7 +58,7 @@
 
             }
 
-        const user = JSON.parse(document.getElementById('User').textContent);
+        const roomName = JSON.parse(document.getElementById('room_name').textContent);
         const history = JSON.parse(document.getElementById('history').textContent);
 
         function history_back(history) {
@@ -81,7 +81,7 @@
             'ws://'
             + window.location.host
             + '/ws/battle/'
-            + user
+            + roomName
             + '/'
         );
 
