@@ -1,6 +1,7 @@
 # chat/consumers.py
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from asgiref.sync import async_to_sync
 
 from .shipbuild import Tile
 from .game import Game
@@ -42,6 +43,7 @@ class BattleConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        async_to_sync(game.save(message))
 
         # Send message to room group
         await self.channel_layer.group_send(
@@ -54,9 +56,16 @@ class BattleConsumer(AsyncWebsocketConsumer):
 
     # Receive message from room group
     async def chat_message(self, event):
-        message = event['message']
+        if event:
+            message = event['message']
+        print(game.players)
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
-            'message': message
-        }))
+            'message': message,
+            # 'message': bot_reply,
+            'user_sea': game.players[0].sea,
+            'bot_sea': game.players[1].sea,
+        },
+            default=serialize
+        ))

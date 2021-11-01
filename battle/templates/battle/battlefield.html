@@ -10,17 +10,19 @@
     <input id="chat-message-input" type="text" size="80"><br>
     <input id="chat-message-submit" type="button" value="Send">
 
-    <h1>human's ships</h1>
+    <h1>your ships</h1>
     <div id='tile_you' style="display:grid; grid-template-columns: repeat(10, 1fr); grid-gap: 5px; width: 240px;">
     </div>
 
-    <h1>bot's ships</h1>
+    <h1>enemy's ships</h1>
 
     <div id='tile_enemy' style="display:grid; grid-template-columns: repeat(10, 1fr); grid-gap: 5px; width: 240px;">
     </div>
 
-    {{ room_name|json_script:"room_name" }}
+    {{ username|json_script:"username" }}
     {{ History|json_script:"history" }}
+    {{ state|json_script:"game_state" }}
+
 
 
     <script>
@@ -58,8 +60,9 @@
 
             }
 
-        const roomName = JSON.parse(document.getElementById('room_name').textContent);
+        const userName = JSON.parse(document.getElementById('username').textContent);
         const history = JSON.parse(document.getElementById('history').textContent);
+        const game_state = JSON.parse(document.getElementById('game_state').textContent);
 
         function history_back(history) {
 
@@ -71,19 +74,24 @@
 
         history_back(history);
 
-        // const user_ships = JSON.parse(document.getElementById('human_tiles').textContent);
-        // render_battlefield(user_ships, 'tile_enemy');
-        // const bot_ships = JSON.parse(document.getElementById('bot_tiles').textContent);
-        // render_battlefield(bot_ships, 'tile_you');
-
-
         const battle_Socket = new WebSocket(
             'ws://'
             + window.location.host
-            + '/ws/battle/'
-            + roomName
-            + '/'
+            + '/ws/'
+            + 'battle/'
         );
+
+        battle_Socket.onopen = function(e) {
+            // alert("[open] Connection established");
+            // alert("Sending to server");
+            if (game_state == 'in_progress') {
+
+                const message = 'hey motherfuckers';
+                battle_Socket.send(JSON.stringify({
+                    'message': message
+                }));
+            };
+        };
 
         battle_Socket.onmessage = function(e) {
             const data = JSON.parse(e.data);
@@ -111,7 +119,7 @@
 
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
+            const message = userName + ': ' + messageInputDom.value;
             battle_Socket.send(JSON.stringify({
                 'message': message
             }));

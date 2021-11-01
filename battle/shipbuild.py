@@ -1,5 +1,4 @@
 import random
-from collections import namedtuple
 
 
 BOARDHEIGHT = 10

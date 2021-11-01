@@ -4,9 +4,12 @@ from .shipbuild import default_grid, Tile, SHIPS, place_ship, go_random, GRID_LE
 class Player:
     sea = [[]]
     shots_log = []
+    player_id = None
 
-    def __init__(self):
+    def __init__(self, player_id, username):
         self.sea = default_grid(Tile)
+        self.player_id = player_id
+        self.name = username
 
     def place_ships(self, ships):
         for ship in ships:
@@ -16,18 +19,28 @@ class Player:
         self.sea.clear()
         self.sea = default_grid(Tile)
 
+    def __repr__(self):
+        return self.name
+
 
 class Game:
 
     state = 'idle'
     log = []
-    reply = 'prepare to be killed'
-    user = Player()
-    bot = Player()
+    players = []
+
+    def add(self, player):
+        if len(set(self.players)) < 2:
+            self.players.append(player)
+            if len(set(self.players)) == 2:
+                self.startgame()
+                self.state = 'in_progress'
+            elif len(set(self.players)) == 1:
+                self.state = 'waiting_for_enemy'
 
     def startgame(self):
-        self.user.place_ships(SHIPS)
-        self.bot.place_ships(SHIPS)
+        self.players[0].place_ships(SHIPS)
+        self.players[1].place_ships(SHIPS)
 
     def reset(self):
         self.user.reset_sea()
