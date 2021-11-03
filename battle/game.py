@@ -5,11 +5,11 @@ class Player:
     sea = [[]]
     shots_log = []
     player_id = None
+    name = None
 
-    def __init__(self, player_id, username):
+    def __init__(self, name):
         self.sea = default_grid(Tile)
-        self.player_id = player_id
-        self.name = username
+        self.name = name
 
     def place_ships(self, ships):
         for ship in ships:
@@ -27,20 +27,25 @@ class Game:
 
     state = 'idle'
     log = []
-    players = []
+    '''
+    TODO:
+    Players is a dictionary
+    '''
+    players = {}
 
-    def add(self, player):
-        if len(set(self.players)) < 2:
-            self.players.append(player)
-            if len(set(self.players)) == 2:
+    def add_player(self, player_id, name):
+        number_of_players = len(set(self.players))
+        if number_of_players < 2:
+            self.players[player_id] = Player(name)
+            if number_of_players == 2:
                 self.startgame()
                 self.state = 'in_progress'
-            elif len(set(self.players)) == 1:
+            elif number_of_players == 1:
                 self.state = 'waiting_for_enemy'
 
     def startgame(self):
-        self.players[0].place_ships(SHIPS)
-        self.players[1].place_ships(SHIPS)
+        for player_id, player in self.players:
+            player.place_ships()
 
     def reset(self):
         self.user.reset_sea()

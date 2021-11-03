@@ -19,6 +19,13 @@ def serialize(obj):
 game = Game()
 
 
+def pack_ships(players):
+    dict_out = {}
+    for player_id, player in players:
+        dict_out[player_id] = player.sea
+    return dict_out
+
+
 class BattleConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -64,8 +71,7 @@ class BattleConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': message,
             # 'message': bot_reply,
-            'user_sea': game.players[0].sea,
-            'bot_sea': game.players[1].sea,
+            'ships': pack_ships(game.players),
         },
             default=serialize
         ))
