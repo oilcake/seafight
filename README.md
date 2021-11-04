@@ -26,9 +26,9 @@ coverage report
 
 <strong>http://localhost:8000/</strong>
 
-to start a game send "start"
-to reset a game send "reset"
-shoot: <letter> <number>
+server is accessible from local network at host machine's ip
+
+shoot: bang <letter> <number>
 
 <strong>stop server</strong>
 ```

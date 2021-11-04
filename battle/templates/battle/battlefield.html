@@ -6,6 +6,7 @@
     <title>Let's fight</title>
 </head>
 <body>
+    <h4>please send your shots like "bang [letter] [number]"</h4>
     <textarea id="chat-log" cols="80" rows="8"></textarea><br>
     <input id="chat-message-input" type="text" size="80"><br>
     <input id="chat-message-submit" type="button" value="Send">
@@ -147,10 +148,12 @@
 
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
-            const message = userName + ': ' + messageInputDom.value;
+            const message_content = messageInputDom.value;
+            const message = userName + ': ' + message_content;
             battle_Socket.send(JSON.stringify({
                 'type': 'chat',
-                'message': message
+                'message': message,
+                'shooter': get_id()
             }));
             messageInputDom.value = '';
         };

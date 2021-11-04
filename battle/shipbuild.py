@@ -9,6 +9,9 @@ BOARDWIDTH = 10
 SHIPS = [
         (1, 'straight'),
         (1, 'straight'),
+        (1, 'straight'),
+        (1, 'straight'),
+        (1, 'straight'),
     ]
 
 

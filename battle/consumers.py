@@ -3,7 +3,7 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync
 
-from .shipbuild import Tile, default_grid
+from .shipbuild import Tile, GRID_LETTERS
 from .game import Game
 
 
@@ -16,7 +16,24 @@ def serialize(obj):
     return obj.__dict__
 
 
+def strip_message(message):
+    str_message = message.split(':')[1]
+    return str_message[1:]
+
+
 game = Game()
+
+
+def convert_coords(message):
+    '''
+    convert (letter, number) to (x, y)
+    '''
+    message_split = message.lower().split()
+    letter = message_split[1]
+    number = message_split[2]
+    y = GRID_LETTERS.index(letter)
+    x = int(number) - 1
+    return y, x
 
 
 def pack_ships(players):
@@ -60,6 +77,18 @@ class BattleConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         if text_data_json['type'] == 'chat':
             message = text_data_json['message']
+            shooter = text_data_json['shooter']
+            strp_message = strip_message(message)
+            if strp_message.lower().startswith('bang '):
+                enemy = game.find_enemy(shooter)
+                shot_y, shot_x = convert_coords(strp_message)
+                game.shoot(enemy, shot_y, shot_x)
+                data = {'type': 'system_message',
+                        'ships': game.players}
+                # Send message to room group
+                await self.channel_layer.group_send(
+                    self.room_group_name, data)
+
             async_to_sync(game.save(message))
 
             # construct chat message
@@ -77,7 +106,7 @@ class BattleConsumer(AsyncWebsocketConsumer):
             data = {'type': 'system_message',
                     'ships': ships}
 
-            # Send message to room group
+        # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name, data)
 
@@ -96,7 +125,6 @@ class BattleConsumer(AsyncWebsocketConsumer):
     async def system_message(self, event):
         if event:
             message = event['ships']
-            print(message)
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
