@@ -28,8 +28,6 @@ coverage report
 
 server is accessible from local network at host machine's ip
 
-shoot: bang <letter> <number>
-
 <strong>stop server</strong>
 ```
 docker compose down
