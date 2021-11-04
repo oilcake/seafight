@@ -1,32 +1,32 @@
 import uuid
 import json
 
-from django.core import serializers
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 
 from battle.consumers import game
 
 
-def serialize(data):
-    return serializers.serialize('json', data)
-
-
-def json_decode(data):
-    return json.loads(data.decode("utf-8"))
-
-
-def stamp_client(name):
+def stamp(username):
     return str(uuid.uuid4())
 
 
+def reset(request):
+    game.reset()
+    return redirect('hello')
+
+
 def index(request):
+
     if request.method == 'GET':
         return render(request, 'battle/index.html')
+
     if request.method == 'POST':
         decoded = json.loads(request.body)
-        name = decoded['client']['name']
-        unique_id = stamp_client(name)
-        game.add_player(unique_id, name)
-        response = {'client': {'name': name, 'key': unique_id}}
+        client = decoded['client']['name']
+        unique_id = stamp(client)
+        player_added = game.add_player(unique_id, client)
+        response = {'client': {'name': client,
+                               'key': unique_id,
+                               'status': player_added}}
         return JsonResponse(response)

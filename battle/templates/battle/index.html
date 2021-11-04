@@ -30,8 +30,10 @@
 
             xhr.onreadystatechange = function () {
                if (xhr.readyState === 4) {
-                  console.log(xhr.status);
-                  console.log(xhr.responseText);
+                    var client = JSON.parse(xhr.responseText);
+                    var client_url = client.client.key;
+                    console.log(client_url);
+                    window.location.pathname = 'battle/' + client_url + '/';
                }};
 
             var data = JSON.stringify({
@@ -39,9 +41,6 @@
             });
 
             xhr.send(data);
-
-
-            // window.location.pathname = userName + '/';
         };
     </script>
 </body>

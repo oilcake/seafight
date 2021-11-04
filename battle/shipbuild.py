@@ -32,11 +32,6 @@ def default_grid(empty_tile):
     return default_grid
 
 
-def print_grid(grid):
-    for _ in grid:
-        print(_)
-
-
 def go_random():
     y = random.randint(0, BOARDHEIGHT - 1)
     x = random.randint(0, BOARDWIDTH - 1)

@@ -26,6 +26,30 @@
 
 
     <script>
+        function get_id() {
+            var path = window.location.pathname;
+            var split = path.split('/');
+            return split[2];
+        }
+
+        function sort_ships(ships) {
+            id = get_id();
+            var me = ships[id].sea;
+            for (let user of Object.keys(ships)) {
+                if (user != get_id()) {
+                    var enemy = ships[user].sea;
+                };
+            };
+            var battle = {
+                'me': me,
+                'enemy': enemy
+            };
+        return battle;
+        }
+
+        function choose_enemy_ships(ships) {
+            console.log(ships);
+        }
 
         function erase_battlefield(callback, battlefield, tile_ent) {
             const tile = document.getElementById(tile_ent)
@@ -82,27 +106,31 @@
         );
 
         battle_Socket.onopen = function(e) {
-            // alert("[open] Connection established");
-            // alert("Sending to server");
-            if (game_state == 'in_progress') {
+            if (game_state == 'waiting_for_enemy') {
+                alert('please wait for your opponent to join');
+            }
+            battle_Socket.send(JSON.stringify({
+                'type': 'game',
+                'message': 'refresh'
+            }));
 
-                const message = 'hey motherfuckers';
-                battle_Socket.send(JSON.stringify({
-                    'message': message
-                }));
-            };
         };
 
         battle_Socket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
-            if (data.bot_sea) {
-                const user_ships = data.user_sea;
-                erase_battlefield(render_battlefield, user_ships, 'tile_enemy');
-                const bot_ships = data.bot_sea;
-                erase_battlefield(render_battlefield, bot_ships, 'tile_you');
-
+            if (data.type == 'chat') {
+                document.querySelector('#chat-log').value += (data.message + '\n');
+            };
+            if (data.type == 'game') {
+                if (data.ships) {
+                    const players = sort_ships(data.ships);
+                    const your_ships = players.me;
+                    erase_battlefield(render_battlefield, your_ships, 'tile_you');
+                    const enemy_ships = players.enemy;
+                    erase_battlefield(render_battlefield, enemy_ships, 'tile_enemy');
+                };
             }
+            
         };
 
 
@@ -121,6 +149,7 @@
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = userName + ': ' + messageInputDom.value;
             battle_Socket.send(JSON.stringify({
+                'type': 'chat',
                 'message': message
             }));
             messageInputDom.value = '';

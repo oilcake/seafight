@@ -22,6 +22,9 @@ class Player:
     def __repr__(self):
         return self.name
 
+    def __iter__(self):
+        yield self.sea
+
 
 class Game:
 
@@ -34,22 +37,36 @@ class Game:
     players = {}
 
     def add_player(self, player_id, name):
+        '''
+        player_id is essentially a player's url
+        player's ships will be available at <some_address>/player_id
+        '''
         number_of_players = len(set(self.players))
         if number_of_players < 2:
             self.players[player_id] = Player(name)
-            if number_of_players == 2:
-                self.startgame()
-                self.state = 'in_progress'
-            elif number_of_players == 1:
-                self.state = 'waiting_for_enemy'
+            result = 'accepted'
+        else:
+            result = 'refused'
+        self.check_state()
+        return result
+
+    def check_state(self):
+        number_of_players = len(set(self.players))
+        if number_of_players == 2 and self.state != 'in_progress':
+            self.startgame()
+            self.state = 'in_progress'
+        elif number_of_players == 1:
+            self.state = 'waiting_for_enemy'
+        elif number_of_players == 0:
+            self.state = 'idle'
 
     def startgame(self):
-        for player_id, player in self.players:
-            player.place_ships()
+        for player_id in self.players:
+            player = self.players[player_id]
+            player.place_ships(SHIPS)
 
     def reset(self):
-        self.user.reset_sea()
-        self.bot.reset_sea()
+        self.players.clear()
         self.state = 'idle'
         self.log.clear()
 
