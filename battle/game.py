@@ -82,18 +82,5 @@ class Game:
         elif target.sea[y][x].state == 'ship':
             target.sea[y][x].state = 'killed'
 
-    def bot_move(self):
-        while True:
-            bot_shot = go_random()
-            if bot_shot not in self.bot.shots_log:
-                break
-        self.bot.shots_log.append(bot_shot)
-        y, x = bot_shot
-
-        if self.user.sea[y][x].state == 'ship':
-            self.user.sea[y][x].state = 'killed'
-        if self.user.sea[y][x].state == 'default':
-            self.user.sea[y][x].state = 'missed'
-
     def save(self, message):
         self.log.append(message)

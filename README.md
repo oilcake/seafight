@@ -27,6 +27,7 @@ coverage report
 <strong>http://localhost:8000/</strong>
 
 server is accessible from local network at host machine's ip
+you can reset game by going <strong>http://localhost:8000/reset</strong>
 
 <strong>stop server</strong>
 ```
