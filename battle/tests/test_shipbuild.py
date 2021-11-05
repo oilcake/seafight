@@ -1,8 +1,8 @@
-from ..shipbuild import default_grid, Tile
+from ..shipbuild import default_sea, Tile
 
 
 def test_default_grid():
-    grid = default_grid(Tile)
+    grid = default_sea(Tile)
     assert isinstance(grid, list) is True
     assert grid[0][0] is not grid[0][1]
 

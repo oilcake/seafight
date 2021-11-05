@@ -4,8 +4,7 @@ from .consumers import game
 
 
 def battlefield(request, player_id):
-    active_players = game.players.keys()
-    if player_id in active_players:
+    if player_id in game.players.keys():
         player = game.players[player_id]
         username = player.name
         return render(request, 'battle/battlefield.html', {

@@ -24,15 +24,15 @@ def letter_range(start, stop="{", step=1):
 GRID_LETTERS = list(letter_range("a", "k"))
 
 
-def default_grid(empty_tile):
+def default_sea(empty_tile):
     """
     Function generates a list of 10 x 10 tiles with default values
     """
-    default_grid = [[]*BOARDWIDTH]*BOARDHEIGHT
+    default_sea = [[]*BOARDWIDTH]*BOARDHEIGHT
     for y in range(BOARDHEIGHT):
-        default_grid[y] = [empty_tile() for x in range(BOARDWIDTH)]
+        default_sea[y] = [empty_tile() for x in range(BOARDWIDTH)]
 
-    return default_grid
+    return default_sea
 
 
 def go_random():
