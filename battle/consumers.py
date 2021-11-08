@@ -18,22 +18,6 @@ game = Game()
 parser = MessageParser(game)
 
 
-# def pack_ships(players):
-#     dict_out = {}
-#     for player_id, player in players:
-#         dict_out[player_id] = player.sea
-#     return dict_out
-
-
-# def find_not_player(player_id):
-#     '''
-#     finds the opponent from dict with players
-#     '''
-#     for player in game.players.keys():
-#         if player != player_id:
-#             return player
-
-
 class BattleConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -56,6 +40,7 @@ class BattleConsumer(AsyncWebsocketConsumer):
 
     # Receive message from WebSocket
     async def receive(self, text_data):
+        # pass message to parser
         data = parser.parse(text_data)
 
         # Send message to room group

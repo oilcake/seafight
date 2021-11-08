@@ -12,12 +12,12 @@
     <input id="chat-message-submit" type="button" value="Send">
 
     <h1>your ships</h1>
-    <div id='tile_you' style="display:grid; grid-template-columns: repeat(10, 1fr); grid-gap: 5px; width: 240px;">
+    <div id='tile_you' style="display:grid; grid-template-columns: repeat({{ BOARDWIDTH }}, 1fr); grid-gap: 5px; width: 240px;">
     </div>
 
     <h1>enemy's ships</h1>
 
-    <div id='tile_enemy' style="display:grid; grid-template-columns: repeat(10, 1fr); grid-gap: 5px; width: 240px;">
+    <div id='tile_enemy' style="display:grid; grid-template-columns: repeat({{ BOARDWIDTH }}, 1fr); grid-gap: 5px; width: 240px;">
     </div>
 
     {{ username|json_script:"username" }}
@@ -27,6 +27,24 @@
 
 
     <script>
+        const COLORS = {
+                    "default":"#ffffff",
+                    "missed": "#0000ff",
+                    "ship":"#008000",
+                    "wounded": "#ff0000",
+                    "killed":"#000000"
+                }
+
+
+        const COLORS_invisible = {
+                    "default":"#ffffff",
+                    "missed": "#0000ff",
+                    "ship":"#ffffff",
+                    "wounded": "#ff0000",
+                    "killed":"#000000"
+                }
+
+
         function get_id() {
             var path = window.location.pathname;
             var split = path.split('/');
@@ -48,25 +66,16 @@
         return battle;
         }
 
-        function choose_enemy_ships(ships) {
-            console.log(ships);
-        }
 
-        function erase_battlefield(callback, battlefield, tile_ent) {
-            const tile = document.getElementById(tile_ent)
-            tile.innerHTML = null
-            callback(battlefield, tile_ent);
-        }
+        function erase_battlefield(callback, battlefield, tile_ent, colors) {
+            const tile = document.getElementById(tile_ent);
+            tile.innerHTML = null;
+            callback(battlefield, tile_ent, colors);
+        };
 
-        function render_battlefield(battlefield, tile_ent) {
 
-            const colors = {
-                        "default":"#ffffff",
-                        "missed": "#0000ff",
-                        "ship":"#008000",
-                        "wounded": "#ff0000",
-                        "killed":"#808080"
-                    }
+        function render_battlefield(battlefield, tile_ent, colors) {
+
             const tile = document.getElementById(tile_ent);
             tile.style.borderColor = '#000';
     
@@ -80,10 +89,10 @@
                     cellElement.style.width = "20px";
                     fragment.append(cellElement);
                     })
-                })
+                });
                 tile.append(fragment);
 
-            }
+            };
 
         const userName = JSON.parse(document.getElementById('username').textContent);
         const history = JSON.parse(document.getElementById('history').textContent);
@@ -94,8 +103,8 @@
             for (let i = 0; i < history.length; i++) {
                 past_message = history[i]
                 document.querySelector('#chat-log').value += (past_message + '\n');
-            }
-        }
+            };
+        };
 
         history_back(history);
 
@@ -126,9 +135,9 @@
                 if (data.ships) {
                     const players = sort_ships(data.ships);
                     const your_ships = players.me;
-                    erase_battlefield(render_battlefield, your_ships, 'tile_you');
+                    erase_battlefield(render_battlefield, your_ships, 'tile_you', COLORS);
                     const enemy_ships = players.enemy;
-                    erase_battlefield(render_battlefield, enemy_ships, 'tile_enemy');
+                    erase_battlefield(render_battlefield, enemy_ships, 'tile_enemy', COLORS_invisible);
                 };
             }
             

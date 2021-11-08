@@ -11,8 +11,9 @@ def test_game_is_idle(dummy_game):
 
 
 def test_player_is_added(dummy_game):
-    client = 'Pasha'
     game = dummy_game
+    game.reset()
+    client = 'Pasha'
     player_added = game.add_player(client, stamp(client))
     assert player_added == 'accepted'
     assert len(game.players) == 1
@@ -20,8 +21,9 @@ def test_player_is_added(dummy_game):
 
 
 def test_two_players_are_added(dummy_game):
-    clients = ['Pasha', 'Gosha']
     game = dummy_game
+    game.reset()
+    clients = ['Pasha', 'Gosha']
     for client in clients:
         game.add_player(client, stamp(client))
     assert len(game.players) == 2
@@ -29,8 +31,9 @@ def test_two_players_are_added(dummy_game):
 
 
 def test_third_player_is_not_added(dummy_game):
-    clients = ['Pasha', 'Gosha']
     game = dummy_game
+    game.reset()
+    clients = ['Pasha', 'Gosha']
     for client in clients:
         game.add_player(client, stamp(client))
     one_more_client = game.add_player('Henry', stamp('Henry'))

@@ -29,10 +29,19 @@ class MessageParser:
         text_data_json = json.loads(text_data)
         if text_data_json['type'] == 'chat':
             message = text_data_json['message']
+            '''
+            TODO:
+            game saving definately should be moved out of parser
+
+            '''
             self.game.save(message)
             shooter = text_data_json['shooter']
             striped_message = strip_message(message)
             if striped_message.lower().startswith('bang '):
+                '''
+                TODO
+                the same with game.shoot
+                '''
                 return self.shoot(shooter, striped_message)
             return self.chat(message)
 

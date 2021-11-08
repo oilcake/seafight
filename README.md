@@ -34,3 +34,4 @@ you can reset game by going <strong>http://localhost:8000/reset </strong>
 ```
 docker compose down
 ```
+

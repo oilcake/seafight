@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse
 
 from .consumers import game
+from battle.shipbuild import BOARDWIDTH
 
 
 def battlefield(request, player_id):
@@ -11,6 +12,7 @@ def battlefield(request, player_id):
             'username': username,
             'state': game.state,
             'History': game.log,
+            'BOARDWIDTH': BOARDWIDTH
             })
     else:
         return HttpResponse('sorryan - tretiy lishniy')

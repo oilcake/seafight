@@ -18,6 +18,7 @@ def test_form(client):
 
 
 def test_stamp_client(client):
+    game.reset()
     url = reverse('hello')
     statuses = ['accepted', 'refused']
     name = 'Misha'
@@ -70,7 +71,7 @@ def test_player_is_added(client):
     assert game.state == 'waiting_for_enemy'
 
 
-def test_two_player_are_added(client):
+def test_two_players_are_added(client):
     game.reset()
     url = reverse('hello')
     clients = ['Jim', 'Jack']
