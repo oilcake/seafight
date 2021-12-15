@@ -1,6 +1,10 @@
 # seafight
 
-<strong>build the image</strong>
+<strong>add [secret key](https://djecrety.ir) in .env</strong>
+```
+cp template.env .env
+```
+<strong>build</strong>
 ```
 docker compose build
 ```
@@ -10,7 +14,7 @@ docker compose build
 docker compose up
 ```
 
-<strong>connect to container</strong>
+<strong>send something to server</strong>
 ```
 docker exec -it socket_fight bash
 ```
